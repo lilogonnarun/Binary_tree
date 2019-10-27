@@ -1,4 +1,5 @@
-/*先序构建而二叉树*/
+/*以‘#’作为空节点标识符，先序遍历串构建树
+ * 功能：缺省、带参构建的公、私函数、递归、非递归前中后遍历，层数*/
 #include <iostream>
 #include <queue>
 #include <stack>
@@ -23,11 +24,11 @@ class BiTree
     void tailTraverse_no_recur_checkpre(BiNode* p);
     void tailTraverse_no_recur_checktag(BiNode* root);
     void levelTraverse(BiNode *p);
+    int  treeDepth(BiNode *p);
 public:
     BiTree():root(nullptr){}
     BiNode* createTree()
     {
-//        root=creat_tree_no_ar();
         root=new BiNode;
         creat_tree_with_ar(root);
     };
@@ -36,12 +37,17 @@ public:
     void fTraverse(){frontTraverse(root);cout<<endl;};
     void mTraverse(){midTraverse(root);cout<<endl;};
     void tTraverse(){
-//        tailTraverse(root);
-//tailTraverse_no_recur_checkpre(root);
-tailTraverse_no_recur_checktag(root);
-cout<<endl;};
+        tailTraverse(root);
+        tailTraverse_no_recur_checkpre(root);
+        tailTraverse_no_recur_checktag(root);
+        cout<<endl;};
     /*层次遍历*/
     void lTraverse(){levelTraverse(root);cout<<endl;};
+    /*这里二叉树的层数是从1开始*/
+    void getDepth()
+    {
+        cout<<treeDepth(root)-1<<endl;
+    }
 };
 /*无传入参数，返回值为节点指针*/
 /*如需建立父节点，需要传入节点参数，同时将上一个节点作为参数传入下一次递归构建*/
@@ -66,12 +72,12 @@ void BiTree::creat_tree_with_ar(BiNode *p) {
     char ch;
     if(cin>>ch)
     {
-        if (ch != '#') {
+        if (ch != '0') {
             p->data = ch;
-            if (ch != '#')
+            if (ch != '0')
                 p->lchild = new BiNode();
             creat_tree_with_ar(p->lchild);
-            if (ch != '#')
+            if (ch != '0')
                 p->rchild = new BiNode();
             creat_tree_with_ar(p->rchild);
         }
@@ -185,7 +191,7 @@ void BiTree::tailTraverse_no_recur_checktag(BiNode *root) {
             p = nullptr;
         }
     }
-    
+
 }
 void BiTree::levelTraverse(BiNode *p) {
     queue<BiNode *> tq;
@@ -208,6 +214,17 @@ void BiTree::levelTraverse(BiNode *p) {
         }
     }
 }
+int BiTree::treeDepth(BiNode *p) {
+    if(!p)
+
+    {
+        return 0;
+    }
+    int nleft=treeDepth(p->lchild);
+    int nright=treeDepth(p->rchild);
+
+    return (nleft>nright)?(nleft+1):(nright+1);
+}
 int main()
 {
     int t;
@@ -216,9 +233,10 @@ int main()
     {
         BiTree biTree;
         biTree.createTree();
-        biTree.fTraverse();
-        biTree.mTraverse();
-        biTree.tTraverse();
-        biTree.lTraverse();
+//        biTree.fTraverse();
+//        biTree.mTraverse();
+//        biTree.tTraverse();
+//        biTree.lTraverse();
+        biTree.getDepth();
     }
 }
